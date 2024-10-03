@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <mpi.h>
-CAZZI
+
 //Compilare
 //mpicc hello_world_0.c -o hello_world_0
 
