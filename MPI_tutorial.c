@@ -5,8 +5,8 @@
 //mpicc hello_world_0.c -o hello_world_0
 
 //Eseguire (-n è il numero di processi in parallelo)
-//mpirun -Wall --oversubscribe -n 10 hello_world_0
-//mpiexec -n 4 ./hello_world_0
+//mpirun --oversubscribe -n 10 nome_file
+//mpiexec -n 4 ./nome_file
 
 
 int main(void) {
@@ -98,6 +98,10 @@ int main(void) {
 			MPI_Datatype type
 		)
 	*/
+	
+
+
+
 	
 	MPI_Finalize();
 	return 0;
