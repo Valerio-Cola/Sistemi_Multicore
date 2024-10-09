@@ -14,9 +14,24 @@ int main(int argc, char const *argv[])
 
     int recv_l, recv_r; 
 
-    /* Scambio msg utilizzando Isend Irecv che non blocca mai
-       Ssend e Srecv sono bloccanti
-       Bsend e Brecv sono bufferizzati
+    /* 
+        -Standard Send e Recv:
+            Decide MPI se bloccare o meno  
+        
+        -Isend e Irecv:
+            Non blocca mai
+        
+        Modalità di comunicazione:
+
+            -Synchronous Ssend e Srecv sono bloccanti:
+                L'operazione di invio ritorna dopo che l'operazione di ricezione ha iniziato a leggere i dati 
+            
+            -Buffedered Bsend e Brecv:
+                Bufferizzati e bloccanti quidni inefficienti poichè il sender deve attendere la copia dei dati
+                Ibsend e Ibrecv Non Bloccante
+            -Rsend e Rrecv Ready
+                L'op. di invio ritorna correttamente solo se l'operazione di ricezione è gia iniziata 
+                Issend e Isrcv Non Bloccante
     */
 
     //Utilizzo array per le richieste
