@@ -15,7 +15,7 @@ int main(int argc, char const *argv[])
     int recv_l, recv_r; 
 
     /* 
-        -Standard Send e Recv:
+        - Standard Send e Recv:
             Decide MPI se bloccare o meno  
         
         -Isend e Irecv:
