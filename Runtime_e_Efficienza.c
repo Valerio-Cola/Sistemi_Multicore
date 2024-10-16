@@ -64,7 +64,7 @@ int main(int argc, char const *argv[])
             E(n,p)            -> Efficienza = S(n,p)/p  
                 Idealmente vogliamo =1 ma più tende a zero peggio è. Più è piccolo il problema più tende a zero  
         
-        Effettuo lo scaling, per entrambi è importante mantenere alta l'efficienza mantiene alta l'efficienza:
+        Effettuo lo scaling:
             Strong: Aumenta processi diminuisce dimensione problema. 
             Weak: Aumenta dimensione problema e numero processi.
 
