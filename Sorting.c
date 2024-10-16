@@ -87,3 +87,53 @@ void Bubble_Sort(int a[], int lunghezza){
     Iterazione 7
     Compara 1 e 0: scambia => [0, 1, 2, 3, 4, 6, 8, 9]
 */
+
+/*
+    Odd-Even Sort seriale
+    L'algoritmo si struttura in due fasi in cui vengono scambiati gli elementi:
+        pari:     in cui confronta posizione pari > posizione successiva  
+        dispari:  in cui confronta posizione dispari > posizione successiva
+        Nota che i for iniziano da una posizione dispari i = 1, e per arrivare alla successiva si fa +=2
+*/
+void Odd_Even_Sort(int a[], int len){
+    int fase, temp;
+
+    for(fase = 0; fase < len; fase++){
+ 
+        // Fase pari
+        if(fase % 2 == 0){           
+            for(int i = 1; i < len; i+=2){
+                if(a[i-1] > a[i]){
+                    temp = a[i];
+                    a[i] = a[i-1];
+                    a[i-1] = temp;
+                }
+            }
+
+        // Fase dispari
+        }else{
+            for(int i = 1; i < len-1; i+=2){
+                if(a[i] > a[i+1]){
+                    temp = a[i];
+                    a[i] = a[i+1];
+                    a[i+1] = temp;
+                }
+            }
+        }
+    }
+}
+
+/*
+    Odd-Even Parallelo
+    L'algoritmo si struttura in fasi pari e dispari in base al numero di fase e rank per stabilire quale sia il vicino:
+        1. Suddivisione dell'array in aprti uguali tra i processi
+        2. Ogni processo ordina il proprio array
+        3. Ogni processo si scambia le proprie chiavi con un vicino, le ordinano e mantengono metà delle chiavi
+            La scelta delle coppie di processi che si devono scambiare le chiavi avviene selezionando le posizioni pare e dispare 
+            es. processo  0       1
+                       3,4,5,6  7,8,9,10
+                In questo caso il rank più basso mantiene le prime 4 chiavi
+
+        Il professore non ha ancora fornito un'implementazione completa o sono io coglione che non l'ho vista
+
+*/
