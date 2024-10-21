@@ -60,7 +60,17 @@ void matrix_vector_multiplication_mpi(int* A, int* x, int* finale, int righe, in
         }
     }
 
-    // Invio a finale il vettore con i risultati di ogni processo, il processo invia un numero per ogni riga assegnata
+    /*
+        MPI_Gather: I dati raccolti vengono inviati al processo root.
+                    Riduce l'overhead di comunicazione e l'uso di memoria
+        
+        MPI_Allgather: I dati raccolti vengono inviati a tutti i processi,
+                       garantendo che ogni processo abbia una copia completa 
+                       dei dati raccolti. Aumenta l'overhead di comunicazione 
+                       e richiede più memoria
+    
+    MPI_Allgather(finale_locale, righe_locali, MPI_INT, finale, righe_locali, MPI_INT, MPI_COMM_WORLD);
+    */
     MPI_Gather(finale_locale, righe_locali, MPI_INT, finale, righe_locali, MPI_INT, 0, MPI_COMM_WORLD);
 
     free(local_A);
