@@ -60,7 +60,7 @@ void matrix_vector_multiplication_mpi(int* A, int* x, int* finale, int righe, in
         }
     }
 
-    /*
+    /* 
         MPI_Gather: I dati raccolti vengono inviati al processo root.
                     Riduce l'overhead di comunicazione e l'uso di memoria
         
