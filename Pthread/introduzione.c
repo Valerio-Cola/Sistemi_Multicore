@@ -40,7 +40,7 @@ int main(int argc, char const *argv[])
 
     // Creazione di un puntatore a funzione vd. riga 12
     void(*func_ptr)(int) = my_function;
-    *func_ptr(10);
+    func_ptr(10);
     printf("Puntatore: %p\n", func_ptr);
 
 

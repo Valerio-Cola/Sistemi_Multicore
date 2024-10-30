@@ -12,7 +12,6 @@ void *Hello(void* rank){
     return NULL;
 }
 
-
 int main(int argc, char const *argv[]){
 
     long thread;
