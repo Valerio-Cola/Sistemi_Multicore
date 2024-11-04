@@ -9,7 +9,7 @@
 // Differentemente da MPI i thread vengono avviati dal programma
 
 // Compilazione: gcc −g −Wall −o pth_hello pth_hello . c −lpthread
-// Run: pth_hello   <number of threads>
+// Run: pth_hello <number of threads>
 void my_function(int x)
 {
     printf("Input funzione: %d\n", x);
