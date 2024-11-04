@@ -10,7 +10,7 @@ void *Hello(void* rank){
     long my_rank = (long) rank;  // Cast del puntatore a void in long per sistemi a 64-bit
     printf("Hello from thread %ld of %d\n", my_rank, thread_count);
     return NULL;
-}
+} 
 
 int main(int argc, char const *argv[]){
 
