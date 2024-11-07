@@ -1,5 +1,3 @@
-# Installa estensione Markdown Preview Enhanche 
-## Invia comando ctrl+k e poi v per visualizzare la preview
 
 # La Cache
 
