@@ -1,0 +1,22 @@
+Debugging
+• Mostly through gdb (you can find many online 
+resources)
+• valgrind is a quite helpful tool as well
+Chapter
+
+
+Profiling
+• Let’s say I have a piece of code with many 
+functions
+• How to know where most of the time is spent and, 
+thus, where it would make most sense to optimize? 
+(Remember: “Premature optimization is the root of 
+all evil”)
+• We could explicitly time each function (boring, 
+time consuming)
+• We can use a profiler that does that for us (see 
+https://hpc-wiki.info/hpc/Gprof_Tutorial)
+
+
+
+package linux-tools
