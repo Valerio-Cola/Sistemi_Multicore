@@ -1,6 +1,5 @@
-
 # La Cache
-
+ 
 Una cache è una raccolta di locazioni di memoria che possono essere accesse più velocemente rispetto ad altre locazioni di memoria. 
 
 ## Caratteristiche Principali
