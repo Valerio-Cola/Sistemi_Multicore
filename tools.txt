@@ -20,3 +20,6 @@ https://hpc-wiki.info/hpc/Gprof_Tutorial)
 
 
 package linux-tools
+
+Installa estensione Markdown Preview Enhanche per visualizzare i file Markdown in vscode 
+Invia comando ctrl+k e poi v per visualizzare la preview
