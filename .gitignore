@@ -1,4 +1,5 @@
-.vscode
+# VS Code settings
+.vscode/
 
 # File oggetto
 *.o
