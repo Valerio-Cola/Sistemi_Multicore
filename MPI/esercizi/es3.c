@@ -68,14 +68,18 @@ int main(int argc, char** argv) {
             A[i * colonne + j] = rand() % 20;
         }
     }
-    printf("Matrice A:\n");
-    print_matrix(A, righe, colonne);
-            
+
     // Inizializzazione di MPI
     MPI_Init(&argc, &argv);
     int rank, size;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
+    
+    if(rank == 0){
+
+        printf("Matrice A:\n");
+        print_matrix(A, righe, colonne);
+    }
 
     // Verifica che le righe possano essere distribuite correttamente
     if (righe % size != 0) {
@@ -83,16 +87,18 @@ int main(int argc, char** argv) {
         MPI_Abort(MPI_COMM_WORLD, 1);
     }
 
-    while(iterazioni > 0){
+    for (int i = 1; iterazioni > 0; i++) {
         sum_adjacent_mpi(A, B, righe, colonne, rank, size);
-        // Scambia i puntatori A e B
-        int* temp = A;
-        A = B;
-        B = temp;
+        
+        // Copia B in A e azzera B
+        for(int i = 0; i < righe * colonne; i++) {
+            A[i] = B[i];
+            B[i] = 0;
+        }
 
         // Stampa la matrice aggiornata
         if (rank == 0) {
-            printf("Matrice dopo iterazione %d:\n", iterazioni);
+            printf("Matrice dopo iterazione %d:\n", i);
             print_matrix(A, righe, colonne);
         }
 
