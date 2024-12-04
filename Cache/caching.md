@@ -92,6 +92,25 @@ struct alignTo64ByteCacheLine {
 }
 ```
 
+
+```c
+double x[N][8];
+#pragma omp parallel for schedule(static,1)
+    for(int i = 0; i< N; i++){
+        x[i][0] = f(x[i][0])
+    }
+```
+
+```c
+double x[N];
+#pragma omp parallel for schedule(static, 8)
+    for(int i = 0; i< N; i++){
+        x[i] = f(x[i])
+    }
+```
+
+
+
 #### Verificare dimensione cache line:
 * Nel codice: `sysconf(_SC_LEVEL1_DCACHE_LINESIZE)`
 * Da shell: `getconf LEVEL1_DCACHE_LINESIZE`
