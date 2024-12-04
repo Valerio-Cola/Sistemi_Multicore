@@ -25,7 +25,7 @@ int main(int argc, char** argv){
         counts[i] = 0;
     }
 
-    #pragma omp parallel for reduction(+:counts[:max])
+    #pragma omp parallel for reduction(+:counts[:max]) num_threads(4)
     for(unsigned long i = 0; i < ARRAY_SIZE; i++){
         counts[array[i]]++;
     }
