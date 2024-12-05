@@ -18,18 +18,18 @@ Questa repository è una raccolta di appunti universitari del corso **Programmaz
 - **introduzione.c**: Concetti base dei thread POSIX
 - **Mutex.c**: Sincronizzazione con mutex
 - **Semafori.c**: Sincronizzazione con semafori
-- **rwlock_lista_puntata.c**: Liste concatenate thread-safe con read-write lock
-- **thread_safety.c**: Gestione della thread safety
-- **thread_pinning.c**: Assegnamento thread a core specifici
-- **piGreco_concorrenza.c**: Calcolo parallelo di π con diverse strategie
-- **matrice_vettore.c**: Moltiplicazione matrice-vettore parallela
 
 ### 📁 Cache
-- **my_timer.h**: Utility per misurare i tempi di esecuzione
-- **timing.c**: Esempi di misurazione performance
-- **ottimizzazione_perf.c**: Ottimizzazione accessi in memoria
-- **caching.md**: Documentazione su gerarchia della cache
-- **perf_stat.md**: Guida all'analisi delle performance
+- **caching.md**: Documentazione sulla cache
+- **ottimizzazione_perf.c**: Ottimizzazione delle performance
+- **timing.c**: Misurazione dei tempi di esecuzione
+- **my_timer.h**: Header per la gestione dei timer
+- **perf_stat.md**: Statistiche delle performance
+
+### 📁 CUDA
+- **cuda_intro.cu**: Introduzione a CUDA
+- **vect_x_vect.cu**: Moltiplicazione vettoriale con CUDA
+- **cuda_intro.md**: Documentazione introduttiva su CUDA
 
 ## Compilazione
 
@@ -43,6 +43,16 @@ mpicc file.c -o output
 gcc -pthread file.c -o output
 ```
 
+### OpenMP
+```sh
+gcc -fopenmp file.c -o output
+```
+
+### CUDA
+```sh
+nvcc file.cu -o output
+```
+
 ## Esecuzione
 
 ### MPI
@@ -53,6 +63,16 @@ mpirun -n <num_processi> ./output
 ### Pthreads
 ```sh
 ./output <num_threads>
+```
+
+### OpenMP
+```sh
+./output
+```
+
+### CUDA
+```sh
+./output
 ```
 
 ## Tools
