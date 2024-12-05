@@ -1,17 +1,15 @@
 /*
-OpenMP aims to decompose a sequential program into 
-components that can be executed in parallel
+OpenMP mira a decomporre un programma sequenziale in 
+componenti che possono essere eseguiti in parallelo
 
-OpenMP allows an “incremental“ conversion of 
-sequential programs into parallel ones, with the 
-assistance of the compiler
+OpenMP consente una conversione "incrementale" dei 
+programmi sequenziali in paralleli, con l'assistenza del compilatore
 
-Pragmas
-• Special preprocessor instructions.
-• Typically added to a system to allow behaviors that 
-aren’t part of the basic C specification.
-• Compilers that don’t support the pragmas ignore 
-them.
+Pragma
+• Istruzioni speciali del preprocessore.
+• Tipicamente aggiunte a un sistema per consentire comportamenti che 
+non fanno parte della specifica base del C.
+• I compilatori che non supportano i pragma li ignorano.
 #pragma
 
 
@@ -50,13 +48,11 @@ reduction: specifica una variabile condivisa e un operatore di riduzione
 
 
 
-A reduction is a computation that repeatedly 
-applies the same reduction operator to a 
-sequence of operands in order to get a single 
-result. 
-• All of the intermediate results of the operation 
-should be stored in the same variable: the 
-reduction variable
+
+Una riduzione è un calcolo che applica ripetutamente lo 
+stesso operatore di riduzione a una sequenza di operandi per ottenere un singolo risultato. 
+Tutti i risultati intermedi dell'operazione devono essere memorizzati nella stessa variabile:
+la variabile di riduzione. 
 
 reduction(operator:variable)  (operators: +, *, -, &, |, ^, &&, ||)
 

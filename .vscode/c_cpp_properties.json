@@ -4,7 +4,8 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                "/usr/include/hwloc"
+                "/usr/include/hwloc",
+                "/usr/include/x86_64-linux-gnu/mpich"
             ],
             "defines": [],
             "cStandard": "c17",

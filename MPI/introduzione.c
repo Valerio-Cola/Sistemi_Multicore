@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <mpi.h>
-
+ 
 //Compilare
 //mpicc hello_world_0.c -o hello_world_0
 
@@ -98,10 +98,6 @@ int main(void) {
 			MPI_Datatype type
 		)
 	*/
-	
-
-
-
 	
 	MPI_Finalize();
 	return 0;
