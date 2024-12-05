@@ -1,6 +1,10 @@
 # VS Code settings
 .vscode/
 
+# File di log latex
+*.log
+*.aux
+
 # File oggetto
 *.o
 
