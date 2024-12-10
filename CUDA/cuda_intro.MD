@@ -63,7 +63,7 @@ CPU - PCIe - GPU - DRAM
     ```
 
     Quindi una griglia con 24 blocchi ognuno con 6 thread.
-    ![Struttura CUDA](assets/struttura_cuda.png)
+![Struttura CUDA](assets/struttura_cuda.png)
 
 ## Struttura di un Programma CUDA
 
@@ -95,7 +95,7 @@ CPU - PCIe - GPU - DRAM
     - Tutti i thread coinvolti nell'if vengono eseguiti e vengono messi in stallo tutti gli altri.
     - Quando finiscono i thread coinvolti nell'else, vengono eseguiti e vengono messi in stallo tutti gli altri.
     - Avanti così finché il codice non torna univoco.
-    ![Warp Divergence](assets/warp_divergence.png)
+![Warp Divergence](assets/warp_divergence.png)
 
 ## Tipi di Memoria nella GPU
 ![GPU Memory](assets/gpu_mem.png)
