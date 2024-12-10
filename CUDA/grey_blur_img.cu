@@ -1,6 +1,16 @@
+/*
+Per ogni pixel allocato in una matrice 2D: red*0.21 + green*0.72 + blue*0.07
 
-// Organizzato in un insieme di blocchi 
-// Ogni blocco è composto da un insieme di thread = pixel, potrebbe essere che i blocchi a confine abbiano righe/colonne di pixel che non devono lavorare
+La matrice può essere vista come un array 1D composto dalle righe della matrice messe in sequenza
+
+Accesso a singolo pixel [riga*len_riga+colonna]
+
+L'immagine è divisa in blocchi di thread, 1 thread = 1 pixel
+Può essere che i blocchi abbiano righe/colonne di pixel che non devono lavorare
+    poichè la dimensione dell'immagine non è precisa alla griglia di blocchi 
+*/
+
+//Conversione immagine in bianco e nero
 __global__ void colorToGrey(unsigned char *imageColor, unsigned char *imageGrey, int width, int height) {
     // Calcola la posizione globale del pixel 
     int col = blockIdx.x + threadIdx.x * blockDim.x;
@@ -26,6 +36,7 @@ __global__ void colorToGrey(unsigned char *imageColor, unsigned char *imageGrey,
 }
 #define BLUR_SIZE 3
 
+// Effetto blur sull'immagine, si ottiene applicando al pixel il valore medio di tutti i suoi pixel adiacenti
 // Pongo immagine con 1 canale
 __global__ void blurImage(unsigned char *imageIn, unsigned char *imageOut, int width, int height) {
     
@@ -54,6 +65,7 @@ __global__ void blurImage(unsigned char *imageIn, unsigned char *imageOut, int w
                 }
             }
         }
+    // Applica il valore medio calcolato diviso il numero di pixel vicini
     imageOut[row * width + col] = (unsigned char)(pixVal / pixels);
     }
 }

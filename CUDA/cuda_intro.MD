@@ -63,6 +63,7 @@ CPU - PCIe - GPU - DRAM
     ```
 
     Quindi una griglia con 24 blocchi ognuno con 6 thread.
+
 ![Struttura CUDA](assets/struttura_cuda.png)
 
 ## Struttura di un Programma CUDA
@@ -95,6 +96,7 @@ CPU - PCIe - GPU - DRAM
     - Tutti i thread coinvolti nell'if vengono eseguiti e vengono messi in stallo tutti gli altri.
     - Quando finiscono i thread coinvolti nell'else, vengono eseguiti e vengono messi in stallo tutti gli altri.
     - Avanti così finché il codice non torna univoco.
+
 ![Warp Divergence](assets/warp_divergence.png)
 
 ## Tipi di Memoria nella GPU
@@ -111,10 +113,51 @@ CPU - PCIe - GPU - DRAM
 - **L1/L2 Cache**: Usata per la lettura di dati tra gli SM e la memoria globale.
 - **Global Memory**: Lenta e non condivisa tra i vari SM, unica accessibile tramite funzioni CUDA.
 - **Texture Memory**: Veloce e può essere usata per la lettura di dati.
-- **Constant Memory**: Veloce e può solo immagazzinare variabili costanti, può inviare tramite warp a tutti i thread una variabile.
+- **Constant Memory**: Veloce e può solo immagazzinare variabili costanti.
+    - **Cached**
+    - **Supporta il broadcasting a tutti i thread nel warp**
+
+    Ponendo di avere più warp i quali devono accedere alla stessa variabile:
+
+    1. **Se su memoria globale:**
+        - Il primo la invia alla L2, gli altri warp potrebbero non trovarla in L2 e andare a cercarla in globale, questo perché potrebbero accedervi troppo in ritardo e intanto il primo warp ha cacheato altri valori.
+
+    2. **Se su memoria costante:**
+        - Il primo warp la copia nella memoria cache-costante, poiché vengono scritti dati con poca frequenza è più probabile che venga trovata dagli altri warp.
+
+    Come allocare in memoria costante:
+
+    ```cpp
+    __constant__ type variable_name; // static
+    cudaMemcpyToSymbol(variable_name, &host_src, sizeof(type), cudaMemcpyHostToDevice);
+    ```
+
+    Tutti i thread possono accedervi e rimane finché non finisce il programma.
 
 ## Per Info su Utilizzo Memoria
 
 ```bash
 $ nvcc -Xptxas -v file.cu
 ```
+
+## Prestazioni GPU
+
+Calcolate mediante il numero di operazioni in virgola mobile al secondo (FLOP/s), il valore va scalato in base al numero di bit.
+
+Ponendo di avere la memoria globale a 200 GB/s e una GPU con 1500 GFLOP/s, possiamo caricare:
+
+```
+(200 GB/s) / (4 bytes) = 50 milioni di operandi/s
+```
+
+Caricando un'operazione per operando, abbiamo una performance di 50 GFLOP/s, che è il 3.3% (50/1500) della capacità totale. La memoria limita le prestazioni (memory bound) ed è necessario diminuire gli accessi alla memoria globale.
+
+#### Rapporto tra calcolo e accesso alla memoria globale
+
+Il compute-to-global-memory-access ratio è il numero di operazioni eseguite per ogni accesso alla memoria globale.
+
+#### Intensità aritmetica/operativa
+
+Operazioni per byte.
+
+Per raggiungere il picco di prestazioni del processore, che è di 1.5 teraflop al secondo (1.5 TFLOP/s), è necessario un rapporto di 30 o superiore. Questo significa che per ogni operando caricato, devono essere eseguite 30 operazioni in virgola mobile. È quindi necessario aumentare il numero di operazioni in virgola mobile per ogni accesso alla memoria. L'avanzamento tecnologico non è favorevole poiché tende principalmente all'aumento della capacità di calcolo invece che all'aumento della bandwidth delle memorie.
