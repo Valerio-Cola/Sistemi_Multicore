@@ -37,6 +37,7 @@ __global__ void colorToGrey(unsigned char *imageColor, unsigned char *imageGrey,
 #define BLUR_SIZE 3
 
 // Effetto blur sull'immagine, si ottiene applicando al pixel il valore medio di tutti i suoi pixel adiacenti
+// Non del tutto corretto poichè non considera i pixel ai bordi di ogni blocco
 // Pongo immagine con 1 canale
 __global__ void blurImage(unsigned char *imageIn, unsigned char *imageOut, int width, int height) {
     
@@ -59,7 +60,6 @@ __global__ void blurImage(unsigned char *imageIn, unsigned char *imageOut, int w
 
                 // Controlla che il pixel sia all'interno dell'immagine
                 if(curRow > -1 && curRow < height && curCol > -1 && curCol < width) {
-                    //  
                     pixVal += imageIn[curRow * width + curCol];
                     pixels++;
                 }
