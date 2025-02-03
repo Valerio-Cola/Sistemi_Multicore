@@ -39,6 +39,5 @@ int main(int argc, char const *argv[])
     // message or, more commonly, releasing a lock.
     // E.g., locking mutexes in reverse order
 
-    
     return 0;
 }

@@ -172,9 +172,16 @@ La linea orizzontale rappresenta il picco delle prestazioni della GPU, mentre la
 Esempio:
 - Con un'intensità di operazioni FLOP/Byte = 6, si può raggiungere un picco di prestazioni di 2 GFLOP/s.
 - Per raggiungere il picco massimo delle prestazioni della GPU è necessaria un'intensità di 12+ FLOP/Byte.
-
+cv
+- Il punto di intersezione delimita il tipo di limitazione:
 - App1 è limitata dalla banda di memoria.
+    Inoltre il modo a cui accede alla memoria non è efficiente poichè non raggiunge il "punto piu alto".
+- Se ottimmizzo App1 e raggiunge il massimo sulla linea obliqua posso ottimizzare ulteriormente in 2 modi:
+    - Comprare memoria con bandiwidth piu elevato cosi da alzare la linea obliqua.
+    - Aumentare il numero di operazioni in modo da spostarla verso destra
+
 - App2 e App3 sono limitate dalle prestazioni.
+
 - Tutte sono ottimizzate in modo errato poiché nessuna raggiunge il picco massimo.
 
 È possibile aumentare le prestazioni provando:
@@ -197,3 +204,101 @@ Partiziono matrici input in "mattonelle" "Tiles"
 
 ### Fase 2:
 Seconda mattonella di entrambe le matrici. Esecuzione uguale a prima.
+
+## Reduce in CUDA
+
+### Primo metodo
+![Reduce](assets/reduce.png)
+Prima iterazione: ogni thread di numero pari effettua l'operazione su se stesso e il successivo (1 posizione dopo).
+Seconda iterazione: ogni thread multiplo di 2 andrà a prendere l'elemento 2 posizioni dopo
+Terza iterazione: ogni thread multiplo di 4 andrà a prendere l'elemento 4 posizioni dopo
+Cosi via... 
+
+```C++
+// Numero del thread
+unsigned int t = threadIdx.x;
+for (unsigned int salto = 1; salto < blockDim.x; salto *= 2){
+    __syncthreads();
+    if (t % (2*salto) == 0)
+        partialSum[t] += partialSum[t+salto];
+}
+```
+
+#### Problema:
+- Metà thread non lavorano e andando avanti sempre più non lavorano
+- Dopo la quinta iterazione un thread andrà a fare salti piu grandi di 32 elementi, andrà a saltare interi warp e non c'è convergenza
+
+### Secondo Metodo
+![Better Reduce](assets/reduce_better.png)
+
+2 blocchi da 512 thread
+Prima iterazione: i primi 512 thread leggono dati dagli altri 512 thread
+Seconda: i primi 256 thread leggono dagli ultimi 255 thread
+Cosi via...
+
+Otterremo dopo il quinto step un salto minore di 32 e avremo Divergenza
+
+```C++
+__shared__ float partialSum[SIZE];
+partialSum[threadIdx.x] = X[blockIdx.x*blockDim.x+threadIdx.x];
+unsigned int t = threadIdx.x;
+for (unsigned int stride = blockDim.x/2; stride >= 1; stride >> 1){
+    __syncthreads();
+    if (t < stride)
+    partialSum[t] += partialSum[t+stride];
+}
+```
+
+## CUDA + MPI
+Sul cluster MPI non è Gpu-Aware quindi è necessario trasferire i dati dal device all'host per fare le MPI call
+
+Gpu-Aware non c'è bisogno dello scambio di dati
+Partendo dalla GPU_0 faccio:
+```C++
+cudaMemcpy(tmp, src, cudaMemcpyDeviceToHost)
+MPI_Send(tmp, …, N+1, …) // send tmp to process N+
+```
+
+Poi per riceverlo nnella GPU_1
+```C++
+MPI_Recv(tmp, …, N, …) // recv tmp from N+1
+cudaMemcpy(dst, tmp, cudaMemcpyHostToDevice)
+```
+Sul cluster ci sono max2 GPU quindi massimo 2 processi MPI ognuno gestisce una GPU
+```C++
+if(rank % 2 == 0){
+    cudaSetDevice(0);
+}else{
+    cudaSetDevice(1);
+}
+```
+
+## Trasferimento dati tra CPU-GPU con DMA (Direct Memory Access)
+
+Utilizzato da cudaMemcpy() per migliorare efficienza, utilizza PCIe e libera la CPU per altre task
+
+### Virtual Memory Management
+Più spazi di mem virtuale vengono mappati su una singola mem fisica, indirizzi virtuali tradotti in fisici
+
+Ogni indirizzo virtuale è diviso in pagine  mappate dentro e fuori la mem fisica per fare spazio
+
+DMA Utilizza indirizzi fisici:
+    - Quando cudaMemcpy() trasferisce un array lo mappa in 1+ DMA transfer
+    - Traduce gli indirizzi e verifica se ci sono le pagine nella zona di invio e ricezione. Controlla per intero
+    - Per il resto delle stesse DMA transfer non traduce gli indirizzi per maggiore efficienza
+
+Può succedere che l'OS mappi di fuori per errore un dato che sta venendo utilizzato da DMA, per risolvere ciò c'è la pinned memory.
+
+### Pinned memory
+Sono pagine virtuali marcate così che non possano essere mappate al di fuori
+
+### Trasferimento dati con la pinned memory
+
+    - Ogni src e dst in host mem deve essere allocata in pinned mem
+
+## Memoria bloccata (Page-locked Memory)
+Posizionare i dati del programma nella memoria bloccata (pinned memory) consente di risparmiare trasferimenti di dati extra, ma può essere dannoso per l'efficienza della memoria virtuale dell'host.
+
+La memoria bloccata può essere allocata con:
+    - malloc() seguito da una chiamata a mlock(). La deallocazione viene eseguita nell'ordine inverso, cioè munlock() seguito da free().
+    - Oppure chiamando la funzione cudaMallocHost(). La memoria allocata in questo modo deve essere deallocata con una chiamata a cudaFreeHost()

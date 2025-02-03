@@ -126,14 +126,12 @@ void Odd_Even_Sort(int a[], int len){
 /*
     Odd-Even Parallelo
     L'algoritmo si struttura in fasi pari e dispari in base al numero di fase e rank per stabilire quale sia il vicino:
-        1. Suddivisione dell'array in aprti uguali tra i processi
+        1. Suddivisione dell'array in parti uguali tra i processi
         2. Ogni processo ordina il proprio array
         3. Ogni processo si scambia le proprie chiavi con un vicino, le ordinano e mantengono metà delle chiavi
             La scelta delle coppie di processi che si devono scambiare le chiavi avviene selezionando le posizioni pare e dispare 
             es. processo  0       1
                        3,4,5,6  7,8,9,10
                 In questo caso il rank più basso mantiene le prime 4 chiavi
-
-        Il professore non ha ancora fornito un'implementazione completa o sono io coglione che non l'ho vista
 
 */

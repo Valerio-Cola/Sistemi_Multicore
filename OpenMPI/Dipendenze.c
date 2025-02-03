@@ -57,7 +57,7 @@ int main(int argc, char const *argv[]){
     /*
     Posso rimuovere:
         -RAW S2->S1 : Invertendo le righe del for, sum non deve più prendere il valore v dall'iterazione precedente
-                      Prenze direttamente il valore appena aggiornato nell'attuale iterazione
+                      Prende direttamente il valore appena aggiornato nell'attuale iterazione
         -RAW S2: v non deve più dipendere da se stesso
         -RAW S1: è una somma, quindi si può fare una somma parallela con pragma
     */
